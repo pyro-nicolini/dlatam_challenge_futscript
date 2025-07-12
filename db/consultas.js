@@ -1,5 +1,5 @@
 const { Pool } = require("pg");
-const bcrypt = require('bcryptjs')
+const bcrypt = require("bcryptjs");
 
 const pool = new Pool({
   host: "localhost",
@@ -16,24 +16,27 @@ const getTeams = async () => {
 };
 
 const createUser = async (usuario) => {
-let { name, password, rol } = usuario; 
-console.log(password)
-const passwordEncriptada = bcrypt.hashSync(password);
-password = passwordEncriptada;
-const values = [name, passwordEncriptada, rol];
-const query = "INSERT INTO usuarios VALUES (DEFAULT, $1, $2, $3);";
-await pool.query(query, values);
-console.log('inscrito en la BD')
+  let { username, password } = usuario;
+  const passwordEncriptada = bcrypt.hashSync(password);
+  password = passwordEncriptada;
+  const values = [username, passwordEncriptada];
+  const query = "INSERT INTO usuarios VALUES (DEFAULT, $1, $2);";
+  await pool.query(query, values);
+  console.log("inscrito en la BD");
 };
 
-const verificarCredenciales = async (name, password) => {
-  const values = [name];
+const verificarCredenciales = async (username, password) => {
+  const values = [username];
   const query = "SELECT * FROM usuarios WHERE name = $1;";
   const {
     rows: [usuario],
     rowCount,
   } = await pool.query(query, values);
-  console.log(usuario, rowCount);
+  if (!usuario || !rowCount) {
+    throw { code: 404, mensaje: "usuario inválido o inexistente" };
+  } else {
+    return usuario;
+  }
 };
 
 const getPlayers = async (teamID) => {
