@@ -27,15 +27,21 @@ const createUser = async (usuario) => {
 
 const verificarCredenciales = async (username, password) => {
   const values = [username];
-  const query = "SELECT * FROM usuarios WHERE name = $1;";
+  const query = "SELECT * FROM usuarios WHERE username = $1;";
   const {
     rows: [usuario],
     rowCount,
   } = await pool.query(query, values);
   if (!usuario || !rowCount) {
-    throw { code: 404, mensaje: "usuario inválido o inexistente" };
+    throw { code: 404, mensaje: "Usuario o contraseña inválida" };
   } else {
-    return usuario;
+    const passwordCorrecta = await bcrypt.compareSync(
+      password,
+      usuario.password
+    );
+    if (!passwordCorrecta) {
+      throw { code: 400, mensaje: "Usuario o contraseña inválida" };
+    }
   }
 };
 

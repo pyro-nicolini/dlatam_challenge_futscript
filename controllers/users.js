@@ -10,10 +10,15 @@ const crearUsuario = async (req, res) => {
 };
 
 const iniciarSesion = async (req, res) => {
-  const { username, password } = req.body;
-  await verificarCredenciales(username, password);
-  const token = jwt.sign({ username }, secretKey);
-  res.send(token);
+  try {
+    const { username, password } = req.body;
+    await verificarCredenciales(username, password);
+    const token = jwt.sign({ username }, secretKey);
+    res.send(token);
+  } catch (err) {
+    res.status(500).send(err);
+    console.log(err);
+  }
 };
 
 module.exports = { iniciarSesion, crearUsuario };
