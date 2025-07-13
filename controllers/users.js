@@ -20,7 +20,6 @@ const iniciarSesion = async (req, res) => {
     const token = jwt.sign({ username }, secretKey);
     if (!token) return res.status(400).send(err);
     res.status(200).json({ token });
-    console.log(`bienvenido ${username}`);
   } catch (err) {
     res.status(err.code).send(err);
   }
