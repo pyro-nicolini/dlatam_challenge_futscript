@@ -12,6 +12,9 @@ const pool = new Pool({
 const getTeams = async () => {
   const grupoEquipos = await pool.query("SELECT id, name FROM equipos");
   const equipos = grupoEquipos.rows;
+  if (!equipos) {
+    throw { code: 404, mensaje: "sin Datos para mostrar" };
+  }
   return equipos;
 };
 
@@ -49,17 +52,20 @@ const verificarCredenciales = async (username, password) => {
 };
 
 const getPlayers = async (teamID) => {
-  const jugadores = await pool.query(
-    `SELECT j.name AS nombre_jugador, p.name AS posicion, e.id AS id_equipo
+  const result = await pool.query(
+    `SELECT j.name AS name, p.name AS posicion
      FROM jugadores j
      INNER JOIN posiciones p ON j.position = p.id
      INNER JOIN equipos e ON e.id = j.id_equipo
      WHERE e.id = $1;`,
     [teamID]
   );
-  return jugadores.rows;
+  const { rows, rowCount } = result;
+  if (!rows || rowCount === 0) {
+    throw { code: 400, mensaje: "Id no encontrado o Equipo inexistente" };
+  }
+  return rows;
 };
-
 
 const addTeam = async (equipo) => {
   const { name } = equipo;
