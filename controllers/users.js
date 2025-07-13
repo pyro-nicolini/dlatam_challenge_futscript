@@ -9,8 +9,7 @@ const crearUsuario = async (req, res) => {
     const { username } = usuario;
     console.log(`usuario ${username} creado con exito`);
   } catch (err) {
-    res.status(500 || err).send(err);
-    console.log('Server: Problemas con la integridad de los datos')
+res.status(500).send(err.message || "Error del servidor");
   }
 };
 
@@ -22,8 +21,7 @@ const iniciarSesion = async (req, res) => {
     res.send(token);
     console.log(`bienvenido ${username}`)
   } catch (err) {
-    res.status(500 || err).send(err);
-    console.log(err);
+res.status(500).send(err.message || "Error del servidor");
   }
 };
 

@@ -10,7 +10,7 @@ const pool = new Pool({
 });
 
 const getTeams = async () => {
-  const grupoEquipos = await pool.query("SELECT * FROM equipos");
+  const grupoEquipos = await pool.query("SELECT id, name FROM equipos");
   const equipos = grupoEquipos.rows;
   return equipos;
 };
@@ -18,7 +18,7 @@ const getTeams = async () => {
 const createUser = async (usuario) => {
   let { username, password } = usuario;
   if (!username || !password) {
-    throw {code: 400, mensaje: "Nombre y/o contraseña no definido"}
+    throw { code: 400, mensaje: "Nombre y/o contraseña no definido" };
   }
   const passwordEncriptada = await bcrypt.hashSync(password);
   password = passwordEncriptada;
@@ -50,11 +50,16 @@ const verificarCredenciales = async (username, password) => {
 
 const getPlayers = async (teamID) => {
   const jugadores = await pool.query(
-    "SELECT * FROM jugadores WHERE id_equipo = $1",
+    `SELECT j.name AS nombre_jugador, p.name AS posicion, e.id AS id_equipo
+     FROM jugadores j
+     INNER JOIN posiciones p ON j.position = p.id
+     INNER JOIN equipos e ON e.id = j.id_equipo
+     WHERE e.id = $1;`,
     [teamID]
   );
   return jugadores.rows;
 };
+
 
 const addTeam = async (equipo) => {
   const { name } = equipo;
