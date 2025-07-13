@@ -17,7 +17,10 @@ const getTeams = async () => {
 
 const createUser = async (usuario) => {
   let { username, password } = usuario;
-  const passwordEncriptada = bcrypt.hashSync(password);
+  if (!username || !password) {
+    throw {code: 400, mensaje: "Nombre y/o contraseña no definido"}
+  }
+  const passwordEncriptada = await bcrypt.hashSync(password);
   password = passwordEncriptada;
   const values = [username, passwordEncriptada];
   const query = "INSERT INTO usuarios VALUES (DEFAULT, $1, $2);";
