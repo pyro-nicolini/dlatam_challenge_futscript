@@ -39,7 +39,7 @@ const verificarCredenciales = async (username, password) => {
     rowCount,
   } = await pool.query(query, values);
   if (!usuario || !rowCount) {
-    throw { code: 404, mensaje: "Usuario o contraseña inválida" };
+    throw { code: 400, mensaje: "Usuario o contraseña inválida" };
   } else {
     const passwordCorrecta = await bcrypt.compareSync(
       password,
@@ -77,10 +77,11 @@ const addTeam = async (equipo) => {
 const addPlayer = async ({ jugador, teamID }) => {
   const { name, position } = jugador;
   const values = [teamID, name, position];
-  await pool.query(
-    "INSERT INTO jugadores VALUES (DEFAULT, $1, $2, $3);",
+  const result = await pool.query(
+    "INSERT INTO jugadores (id_equipo, name, position) VALUES ($1, $2, $3) RETURNING *;",
     values
   );
+  return result.rows[0];
 };
 
 module.exports = {

@@ -36,9 +36,9 @@ const registrarJugador = async (req, res) => {
       return res.status(400).send("Datos del jugador incompletos");
     }
     await addPlayer({ jugador, teamID });
-    res.json({ message: "Jugador agregado con éxito" });
+    res.status(201).json({ message: "Jugador agregado con éxito" });
   } catch (err) {
-    res.status(500).send(err.message || "Error del servidor");
+    res.status(500).send(err.mensaje);
   }
 };
 

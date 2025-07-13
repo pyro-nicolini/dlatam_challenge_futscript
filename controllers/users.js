@@ -9,7 +9,7 @@ const crearUsuario = async (req, res) => {
     const { username } = usuario;
     console.log(`usuario ${username} creado con exito`);
   } catch (err) {
-    res.status(500).send(err.message || "Error del servidor");
+    res.status(500).send(err);
   }
 };
 
@@ -18,10 +18,11 @@ const iniciarSesion = async (req, res) => {
     const { username, password } = req.body;
     await verificarCredenciales(username, password);
     const token = jwt.sign({ username }, secretKey);
-    res.send(token);
+    if (!token) return res.status(400).send(err);
+    res.status(200).json({ token });
     console.log(`bienvenido ${username}`);
   } catch (err) {
-    res.status(500).send(err.message || "Error del servidor");
+    res.status(err.code).send(err);
   }
 };
 
