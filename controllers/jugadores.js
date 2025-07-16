@@ -9,9 +9,10 @@ const obtenerJugadores = async (req, res) => {
       return res.status(400).send("Falta el ID del equipo");
     }
     let jugadores = await getPlayers(teamID);
+    console.log(jugadores);
     res.json(jugadores);
   } catch (error) {
-    res.status(500).send(error.message || "Error al obtener los jugadores");
+    res.status(500).send(error.mensaje);
   }
 };
 
@@ -35,9 +36,9 @@ const registrarJugador = async (req, res) => {
       return res.status(400).send("Datos del jugador incompletos");
     }
     await addPlayer({ jugador, teamID });
-    res.json({ message: "Jugador agregado con éxito" });
+    res.status(201).json({ message: "Jugador agregado con éxito" });
   } catch (err) {
-    res.status(500).send(err.message || "Error del servidor");
+    res.status(500).send(err.mensaje);
   }
 };
 
