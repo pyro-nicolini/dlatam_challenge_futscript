@@ -13,4 +13,4 @@ INSERT INTO posiciones values
 (DEFAULT, 'delantero'),
 (DEFAULT, 'centrocampista'),
 (DEFAULT, 'defensa'),
-(DEFAULT, 'portero');
+(DEFAULT, 'portero'); 
