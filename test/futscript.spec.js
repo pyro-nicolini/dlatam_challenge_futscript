@@ -26,7 +26,7 @@ describe("Operaciones CRUD de Futscript", () => {
   it("4. POST /equipos/:teamID/jugadores - Al enviar un nuevo jugador junto a un token válido se obtiene un status code 201", async () => {
     const id = 1;
     const username = "tokenFicticio";
-    let token = await jwt.sign(username, secretKey); //eyJhbGciOiJIUzI1NiJ9.dG9rZUZpY3RpY2lv.R3_XO3ROEk-fCHuc1s7M-KC58Cnm75VBnGO4iaTrWSw
+    let token = await jwt.sign(username, secretKey);
     const nuevoJugador = {
       name: "Piero",
       position: 1,
